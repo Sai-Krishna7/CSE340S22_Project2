@@ -6,20 +6,105 @@
 #include <iostream>
 #include <cstdio>
 #include <cstdlib>
+#include <unordered_map>
 #include "lexer.h"
+#include <vector>
+#include <algorithm>
 
 using namespace std;
-
+LexicalAnalyzer lexicalAnalyzer = *new LexicalAnalyzer();
+Token first;
 // read grammar
 void ReadGrammar()
 {
-    cout << "0\n";
+    first = lexicalAnalyzer.GetToken();
+
+    //cout << "0\n";
 }
 
 // Task 1
 void printTerminalsAndNoneTerminals()
 {
-    cout << "1\n";
+    //cout << "1\n";
+    //Write Code
+    Token token;
+    //LexicalAnalyzer lexicalAnalyzer = *new LexicalAnalyzer();
+
+//    unordered_map<string, int> nonTerminals;
+//    unordered_map<string, int> Terminals;
+    vector<Token> nonTerminals;
+    vector<Token> Terminals;
+
+    //int count = 1;
+    int tokenCount = 1;
+
+    //Inserting every string in each line which is before the arrow
+    token = first;
+    nonTerminals.push_back(token);
+//    while(token.token_type != HASH) {
+//        //If when we peek the next string is an ARROW then the current index is a
+//        if (lexicalAnalyzer.peek(1).token_type == ARROW) {
+//            nonTerminals.insert({lexicalAnalyzer.GetToken().lexeme, count});
+//            count++;
+//        }
+//
+//        tokenCount++;
+//        token = lexicalAnalyzer.peek(tokenCount);
+//    }
+
+    while(token.token_type != HASH) {
+        //If when we peek the next string is an ARROW then the current index is a
+        bool repeated = false;
+
+        for (auto it = nonTerminals.begin(); it != nonTerminals.end(); it++) {
+            if (it->lexeme == token.lexeme) {
+                repeated = true;
+                break;
+            }
+        }
+
+        if (lexicalAnalyzer.peek(tokenCount + 1).token_type == ARROW && !repeated) {
+            nonTerminals.push_back(token);
+            //count++;
+        }
+        tokenCount++;
+        token = lexicalAnalyzer.peek(tokenCount);
+    }
+
+    token = first;
+    tokenCount = 1;
+    while(token.token_type != HASH) {
+        //If when we peek the next string is an ARROW then the current index is a
+        bool repeated = false;
+        for (auto it = nonTerminals.begin(); it != nonTerminals.end(); it++) {
+            if (it->lexeme == token.lexeme) {
+                repeated = true;
+                break;
+            }
+        }
+
+        for (auto it = Terminals.begin(); it != Terminals.end(); it++) {
+            if (it->lexeme == token.lexeme) {
+                repeated = true;
+                break;
+            }
+        }
+        if (!repeated) {
+            Terminals.push_back(token);
+        }
+
+        tokenCount++;
+        token = lexicalAnalyzer.peek(tokenCount);
+    }
+
+    //Print terminals
+    for (auto it = Terminals.begin(); it != Terminals.end(); it++) {
+        std::cout << it->lexeme << " ";
+    }
+    //Print nonTerminals
+    for (auto it = nonTerminals.begin(); it != nonTerminals.end(); it++) {
+        std::cout << it->lexeme << " ";
+    }
 }
 
 // Task 2

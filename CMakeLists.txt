@@ -8,5 +8,8 @@ include_directories(__MACOSX)
 
 add_executable(CSE340S22_P2_Provided_Code
         inputbuf.cc
+        inputbuf.h
         lexer.cc
+        lexer.h
         project2.cc)
+
