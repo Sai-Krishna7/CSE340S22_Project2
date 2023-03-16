@@ -22,9 +22,7 @@ void ReadGrammar()
     //cout << "0\n";
 }
 
-// Task 1
-void printTerminalsAndNoneTerminals()
-{
+vector<Token> TerminalsandNonTerminalsVec() {
     //cout << "1\n";
     //Write Code
     Token token;
@@ -97,12 +95,21 @@ void printTerminalsAndNoneTerminals()
         token = lexicalAnalyzer.peek(tokenCount);
     }
 
-    //Print terminals
-    for (auto it = Terminals.begin(); it != Terminals.end(); it++) {
-        std::cout << it->lexeme << " ";
-    }
-    //Print nonTerminals
-    for (auto it = nonTerminals.begin(); it != nonTerminals.end(); it++) {
+    Terminals.reserve(Terminals.size() + nonTerminals.size());
+
+    // copy elements of vec2 into vec1
+    std::copy(nonTerminals.begin(), nonTerminals.end(), std::back_inserter(Terminals));
+
+    return Terminals;
+}
+
+// Task 1
+void printTerminalsAndNoneTerminals()
+{
+    vector<Token> TerminalsandNonTerminals = TerminalsandNonTerminalsVec();
+
+    //Print Terminals and Non Terminals
+    for (auto it = TerminalsandNonTerminals.begin(); it != TerminalsandNonTerminals.end(); it++) {
         std::cout << it->lexeme << " ";
     }
 }
@@ -110,7 +117,12 @@ void printTerminalsAndNoneTerminals()
 // Task 2
 void RemoveUselessSymbols()
 {
-    cout << "2\n";
+    vector<Token> TerminalsandNonTerminals = TerminalsandNonTerminalsVec();
+    Token* arr = TerminalsandNonTerminals.data();
+    int vecSize = TerminalsandNonTerminals.size();
+
+    Token generatingArray[vecSize];
+    std::copy(TerminalsandNonTerminals.begin(), TerminalsandNonTerminals.end(), generatingArray);
 }
 
 // Task 3
